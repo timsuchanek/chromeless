@@ -158,8 +158,10 @@ export default class RemoteChrome implements Chrome {
     }
 
     const promise = new Promise<T>((resolve, reject) => {
-      this.channel.subscribe(this.TOPIC_RESPONSE, () => {
-        this.channel.on('message', (topic, buffer) => {
+      const subscription = () => {
+        console.log('subscribed')
+        this.channel.once('message', (topic, buffer) => {
+          console.log('got message', topic, buffer.toString())
           if (this.TOPIC_RESPONSE === topic) {
             const message = buffer.toString()
             const result = JSON.parse(message) as RemoteResult
@@ -171,12 +173,15 @@ export default class RemoteChrome implements Chrome {
             } else {
               resolve()
             }
+            // this.channel.unsubscribe(this.TOPIC_RESPONSE, subscription)
           }
         })
-      })
+        this.channel.publish(this.TOPIC_REQUEST, JSON.stringify(command))
+      }
+
+      this.channel.subscribe(this.TOPIC_RESPONSE, subscription)
     })
 
-    this.channel.publish(this.TOPIC_REQUEST, JSON.stringify(command))
 
     return promise
   }

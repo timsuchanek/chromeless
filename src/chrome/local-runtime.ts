@@ -29,6 +29,7 @@ export default class LocalRuntime {
   }
 
   async run(command: Command): Promise<any> {
+    console.log('running command', JSON.stringify(command))
     switch (command.type) {
       case 'goto':
         return this.goto(command.url)

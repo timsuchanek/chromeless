@@ -1,7 +1,7 @@
 service: chromeless-serverless
 
 custom:
-  stage: dev
+  stage: prod
   debug: "*"
   awsIotHost: ${env:AWS_IOT_HOST}
   chrome:

@@ -147,9 +147,11 @@ export default class Chromeless<T extends any> implements Promise<T> {
   }
 
   evaluate<U extends any>(fn: (...args: any[]) => void, ...args: any[]): Chromeless<U> {
+    console.log('puting evaluate to queue', arguments)
     this.lastReturnPromise = this.queue.process<U>({type: 'returnCode', fn: fn.toString(), args})
 
     return new Chromeless<U>({}, this)
+    // return this
   }
 
   inputValue(selector: string): Chromeless<string> {
@@ -165,6 +167,7 @@ export default class Chromeless<T extends any> implements Promise<T> {
   }
 
   screenshot(): Chromeless<string> {
+    console.log('putting screenshot to queue')
     this.lastReturnPromise = this.queue.process<string>({type: 'returnScreenshot'})
 
     return new Chromeless<string>({}, this)
